@@ -3,7 +3,6 @@ import { Quicksand, Newsreader } from 'next/font/google';
 import "./globals.css";
 
 const quicksand = Quicksand({ weight: ["400"], subsets: ['latin'] });
-const newsreader = Newsreader({ subsets: ['latin'] });
 
 
 export const metadata: Metadata = {

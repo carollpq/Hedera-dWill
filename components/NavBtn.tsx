@@ -1,6 +1,6 @@
 "use client"
 
-type NavBtnVariant = 'primary' | 'cta' | 'outline' | 'ghost';
+type NavBtnVariant = 'primary' | 'cta' | 'outline';
 
 type NavBtnProps = {
     text: string;
@@ -13,14 +13,12 @@ const getVariantClasses = (variant: NavBtnVariant = 'primary') => {
     switch (variant) {
         case 'cta':
             return [
-                'rounded-md border border-white/50 text-white opacity-90 hover:opacity-100 transition-opacity bg-[#8B5CF666]',
+                'rounded-md border-1 border-white/50 text-white opacity-90 hover:opacity-100 transition-opacity bg-[#8B5CF666]',
                 'bg-gradient-to-r from-white/50 to-transparent',
                 'shadow-[0_12px_34px_0_rgba(0,0,0,0.40)] backdrop-blur'  
             ].join(' ');
         case 'outline':
-            return 'bg-transparent border-2 border-white text-white hover:bg-white hover:text-gray-900';
-        case 'ghost':
-            return 'bg-transparent hover:bg-white/10 text-white';
+            return 'bg-transparent border-1 border-white text-white hover:bg-white hover:text-black';
         case 'primary':
         default:
             return 'group relative bg-transparent text-white';
@@ -34,7 +32,7 @@ export default function NavBtn({
     onClick 
 }: NavBtnProps) {
     const variantClasses = getVariantClasses(variant);
-    const baseClasses = 'px-4 py-2 rounded-lg mx-5 transition-all duration-200 font-medium flex items-center justify-center hover:cursor-pointer text-white/90 hover:text-white';
+    const baseClasses = 'px-7 py-2 mx-4 rounded-lg transition-all duration-200 font-medium flex items-center justify-center hover:cursor-pointer text-white/90 hover:text-white';
     
     return (
         <div className="group relative">
