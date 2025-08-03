@@ -18,7 +18,7 @@ const getVariantClasses = (variant: NavBtnVariant = 'primary') => {
                 'shadow-[0_12px_34px_0_rgba(0,0,0,0.40)] backdrop-blur'  
             ].join(' ');
         case 'outline':
-            return 'bg-transparent border-1 border-white text-white hover:bg-white hover:text-black';
+            return 'bg-transparent border-1 border-white text-white hover:bg-black';
         case 'primary':
         default:
             return 'group relative bg-transparent text-white';

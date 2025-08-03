@@ -3,13 +3,14 @@
 import {Newsreader, Nixie_One} from "next/font/google";
 import Image from "next/image";
 import NavBtn from "@/components/NavBtn";
+import ScrollIndicator from "./ScrollIndicator";
 
 const newsreader = Newsreader({ subsets: ['latin'] });
 const nixieOne = Nixie_One({ weight: ["400"], subsets: ['latin'] });
 
 export default function LandingPage() {
     return (
-        <div className="min-h-screen w-full flex flex-col items-center justify-center pt-24">
+        <div className="min-h-screen w-full flex flex-col items-center justify-center">
             <div className="flex flex-row items-center justify-between w-full max-w-7xl px-4 gap-8">
                 <div className="flex-1 flex flex-col items-start justify-center gap-10">
                     <h1 className={`text-8xl ${newsreader.className} font-[400]`}>dWill<sup>H</sup></h1>
@@ -48,6 +49,7 @@ export default function LandingPage() {
                     </div>
                 </div>
             </div>
+            <ScrollIndicator />
         </div>
     );
 }

@@ -1,13 +1,35 @@
 "use client"
-import Image from 'next/image'
+import { useEffect } from 'react';
 import Navbar from "@/components/Navbar";
 import LandingPage from "@/components/LandingPage";
+import About from "@/components/About";
 
 export default function Home() {
+  useEffect(() => {
+    // Smooth scroll behavior for anchor links
+    const handleSmoothScroll = (e: MouseEvent) => {
+      const target = e.target as HTMLAnchorElement;
+      if (target.matches('a[href^="#"]')) {
+        e.preventDefault();
+        const targetId = target.getAttribute('href');
+        if (targetId) {
+          const targetElement = document.querySelector(targetId);
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+          }
+        }
+      }
+    };
+
+    document.addEventListener('click', handleSmoothScroll);
+    return () => document.removeEventListener('click', handleSmoothScroll);
+  }, []);
+
   return (
-      <main className="flex min-h-screen flex-col items-center justify-between">
-        <Navbar />
-          <LandingPage />
-      </main>
-  )
+    <main className="flex min-h-screen flex-col items-center">
+      <Navbar />
+      <LandingPage />
+      <About />
+    </main>
+  );
 }
