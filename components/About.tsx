@@ -50,7 +50,6 @@ export default function About() {
                         </div>
                     </div>
                 </div>
-                <ScrollIndicator/>
             </div>
         </section>
     );

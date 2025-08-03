@@ -3,6 +3,8 @@ import { useEffect } from 'react';
 import Navbar from "@/components/Navbar";
 import LandingPage from "@/components/LandingPage";
 import About from "@/components/About";
+import Services from "@/components/Services";
+import RoleSelection from "@/components/RoleSelection";
 
 export default function Home() {
   useEffect(() => {
@@ -30,6 +32,8 @@ export default function Home() {
       <Navbar />
       <LandingPage />
       <About />
+      <Services />
+      <RoleSelection />
     </main>
   );
 }
