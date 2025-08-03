@@ -12,6 +12,7 @@ interface GlassCardProps {
     className?: string;
 }
 
+
 export default function GlassCard({title, img, description, alt, className = ''}: GlassCardProps) {
     return (
         <div data-property-1="Default"

@@ -2,6 +2,7 @@
 
 import {Newsreader} from "next/font/google";
 import GlassCard from "@/components/GlassCard";
+import RoleCard from "@/components/RoleCard";
 
 const newsreader = Newsreader({ subsets: ['latin'] });
 
@@ -20,14 +21,13 @@ export default function RoleSelection() {
                     filter: 'blur(175px)',
                     left: '50%',
                     top: '50%',
-                    transform: 'translate(-50%, -60%) rotate(-26.465deg)'
+                    transform: 'translate(-50%, -50%) rotate(-26.465deg)'
                 }}
             />
             <h1 className={`text-5xl font-[400] mb-8 text-start ${newsreader.className} `}>Ready to Start?</h1>
-            <div className="flex flex-row gap-10">
-                <GlassCard title="Assign Beneficiaries" img="/add-beneficiary.png" alt="A picture of a man adding beneficiaries" description="Generate your keys and assign your beneficiaries files dedicated just for them."/>
-                <GlassCard title="Upload Documents" img="/upload-files.png" alt="A picture of a man uploading files" description="Encrypt and upload your files to the IPFS network."/>
-                <GlassCard title="Enable Switch" img="/enable-switch.png" alt="A picture of a switch"description="Enable your very own dead mans switch."/>
+            <div className="flex flex-row gap-[7rem]">
+                <RoleCard title="I am a benefactor" src="/benefactor.png" alt="A picture of a treasure chest" btnText="Subscribe" status="subscribed"/>
+                <RoleCard title="I am a beneficiary" src="/beneficiary.png" alt="A picture of a coin" btnText="Sign Up" status="signed up"/>
             </div>
         </div>
     );
