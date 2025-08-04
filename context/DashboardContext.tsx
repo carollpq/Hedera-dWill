@@ -1,7 +1,8 @@
 "use client";
 
-import {createContext, useContext, useState} from "react";
+import { createContext, useContext, useState } from "react";
 
+// Define the shape of the dashboard context state and setters
 type DashboardContextType = {
     isBenefactor: boolean;
     setIsBenefactor: (value: boolean) => void;
@@ -15,10 +16,12 @@ type DashboardContextType = {
     setIsViewDocumentsPage: (value: boolean) => void;
 };
 
+// Create the context with a default value of null
 const DashboardContext = createContext<DashboardContextType | null>(null);
 
-
-export const DashboardProvider = ({children}: { children: React.ReactNode }) => {
+// Provider component to wrap your app and provide dashboard state
+export const DashboardProvider = ({ children }: { children: React.ReactNode }) => {
+    // State for user roles and navigation
     const [isBenefactor, setIsBenefactor] = useState(false);
     const [isBeneficiary, setIsBeneficiary] = useState(false);
     const [isUploadPage, setIsUploadPage] = useState(false);
@@ -37,13 +40,13 @@ export const DashboardProvider = ({children}: { children: React.ReactNode }) => 
             setIsEncryptPage,
             isViewDocumentsPage,
             setIsViewDocumentsPage
-        }
-        }>
+        }}>
             {children}
         </DashboardContext.Provider>
     );
 }
 
+// Custom hook to use the dashboard context in components
 export const useDashboardContext = () => {
     const context = useContext(DashboardContext);
     if (!context) {
@@ -51,4 +54,3 @@ export const useDashboardContext = () => {
     }
     return context;
 }
-

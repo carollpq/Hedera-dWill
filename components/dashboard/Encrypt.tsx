@@ -3,13 +3,16 @@
 import React, { useRef, useState } from "react";
 import { FileText, Lock, X } from "lucide-react";
 
+// Encrypt component allows users to drag & drop a file, enter recipient info, and encrypt/download the file
 export default function Encrypt() {
+  // State for drag highlight, selected file, and recipient info
   const [dragActive, setDragActive] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [beneficiaryName, setBeneficiaryName] = useState("");
   const [beneficiaryAddress, setBeneficiaryAddress] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
 
+  // Handle drag events to highlight drop area
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -20,6 +23,7 @@ export default function Encrypt() {
     }
   };
 
+  // Handle file drop event
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -29,12 +33,14 @@ export default function Encrypt() {
     }
   };
 
+  // Handle file selection via input
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       setFile(e.target.files[0]);
     }
   };
 
+  // Clear the selected file
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
     setFile(null);
@@ -43,6 +49,7 @@ export default function Encrypt() {
 
   return (
     <div className="space-y-8">
+      {/* Header */}
       <div className="rounded-xl shadow-sm p-6">
         <h1 className="text-3xl font-bold text-white-900">Encrypt</h1>
       </div>
@@ -59,18 +66,22 @@ export default function Encrypt() {
         onClick={() => inputRef.current?.click()}
         style={{ cursor: "pointer" }}
       >
+        {/* Hidden file input */}
         <input
           type="file"
           ref={inputRef}
           className="hidden"
           onChange={handleChange}
         />
+        {/* Lock icon */}
         <Lock className="w-8 h-8 text-blue-600 mb-2" />
+        {/* File name or prompt */}
         <p className="text-gray-700 font-medium">
           {file
             ? `Selected: ${file.name}`
             : "Drag & drop your file here, or click to select"}
         </p>
+        {/* Clear file button */}
         {file && (
           <button
             className="absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 rounded-full p-1"
@@ -83,10 +94,12 @@ export default function Encrypt() {
         )}
       </div>
 
+      {/* Beneficiary info and action buttons */}
       <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
         <h2 className="text-lg font-semibold text-gray-900 mb-4">
           Generate Secret Key and Download Files
         </h2>
+        {/* Beneficiary Name input */}
         <input
           type="text"
           placeholder="Beneficiary Name"
@@ -94,6 +107,7 @@ export default function Encrypt() {
           onChange={(e) => setBeneficiaryName(e.target.value)}
           className="w-full border border-gray-300 rounded-lg p-2 mb-2"
         />
+        {/* Beneficiary Address input */}
         <input
           type="text"
           placeholder="Beneficiary Address"
@@ -101,6 +115,7 @@ export default function Encrypt() {
           onChange={(e) => setBeneficiaryAddress(e.target.value)}
           className="w-full border border-gray-300 rounded-lg p-2 mb-2"
         />
+        {/* Generate Secret Key button */}
         <button
           className="w-full bg-blue-600 text-white rounded-lg py-2 font-semibold hover:bg-blue-700 transition"
           //onClick={handleUpload}
@@ -109,6 +124,7 @@ export default function Encrypt() {
         >
           Generate Secret Key
         </button>
+        {/* Download button */}
         <button
           className="w-full bg-blue-600 text-white rounded-lg py-2 font-semibold hover:bg-blue-700 transition"
           //onClick={handleUpload}

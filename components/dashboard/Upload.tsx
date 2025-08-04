@@ -3,13 +3,16 @@
 import React, { useRef, useState } from "react";
 import { FileText, Upload as UploadIcon, X } from "lucide-react";
 
+// Upload component allows users to drag & drop a file, enter beneficiary info, and upload the file
 export default function Upload() {
+    // State for drag highlight, selected file, and beneficiary info
     const [dragActive, setDragActive] = useState(false);
     const [file, setFile] = useState<File | null>(null);
     const [beneficiaryName, setBeneficiaryName] = useState("");
     const [beneficiaryAddress, setBeneficiaryAddress] = useState("");
     const inputRef = useRef<HTMLInputElement>(null);
 
+    // Handle drag events to highlight drop area
     const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         e.stopPropagation();
@@ -20,6 +23,7 @@ export default function Upload() {
         }
     };
 
+    // Handle file drop event
     const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
         e.preventDefault();
         e.stopPropagation();
@@ -29,18 +33,21 @@ export default function Upload() {
         }
     };
 
+    // Handle file selection via input
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files[0]) {
             setFile(e.target.files[0]);
         }
     };
 
+    // Clear the selected file
     const handleClear = (e: React.MouseEvent) => {
         e.stopPropagation();
         setFile(null);
         if (inputRef.current) inputRef.current.value = "";
     };
 
+    // Placeholder for upload logic
     const handleUpload = () => {
         // Implement upload logic here
         alert("Uploading file...");
@@ -48,6 +55,7 @@ export default function Upload() {
 
     return (
         <div className="space-y-8">
+            {/* Header */}
             <div className="rounded-xl shadow-sm p-6">
                 <h1 className="text-3xl font-bold text-white-900">Upload</h1>
             </div>
@@ -64,16 +72,20 @@ export default function Upload() {
                 onClick={() => inputRef.current?.click()}
                 style={{ cursor: "pointer" }}
             >
+                {/* Hidden file input */}
                 <input
                     type="file"
                     ref={inputRef}
                     className="hidden"
                     onChange={handleChange}
                 />
+                {/* Upload icon */}
                 <UploadIcon className="w-8 h-8 text-blue-600 mb-2" />
+                {/* File name or prompt */}
                 <p className="text-gray-700 font-medium">
                     {file ? `Selected: ${file.name}` : "Drag & drop your file here, or click to select"}
                 </p>
+                {/* Clear file button */}
                 {file && (
                     <button
                         className="absolute top-2 right-2 bg-gray-200 hover:bg-gray-300 rounded-full p-1"
@@ -86,8 +98,10 @@ export default function Upload() {
                 )}
             </div>
 
+            {/* Beneficiary info and upload button */}
             <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">Enter beneficiary address to assign to:</h2>
+                {/* Beneficiary Name input */}
                 <input
                     type="text"
                     placeholder="Beneficiary Name"
@@ -95,6 +109,7 @@ export default function Upload() {
                     onChange={e => setBeneficiaryName(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg p-2 mb-2"
                 />
+                {/* Beneficiary Address input */}
                 <input
                     type="text"
                     placeholder="Beneficiary Address"
@@ -102,6 +117,7 @@ export default function Upload() {
                     onChange={e => setBeneficiaryAddress(e.target.value)}
                     className="w-full border border-gray-300 rounded-lg p-2 mb-2"
                 />
+                {/* Upload button */}
                 <button
                     className="w-full bg-blue-600 text-white rounded-lg py-2 font-semibold hover:bg-blue-700 transition"
                     onClick={handleUpload}

@@ -1,10 +1,10 @@
 "use client"
 import { useEffect } from 'react';
-import Navbar from "@/components/Navbar";
-import LandingPage from "@/components/LandingPage";
-import About from "@/components/About";
-import Services from "@/components/Services";
-import RoleSelection from "@/components/RoleSelection";
+import Navbar from "@/components/landingPage/Navbar";
+import LandingPage from "@/components/landingPage/LandingPage";
+import About from "@/components/landingPage/About";
+import Services from "@/components/landingPage/Services";
+import RoleSelection from "@/components/landingPage/RoleSelection";
 
 export default function Home() {
   useEffect(() => {

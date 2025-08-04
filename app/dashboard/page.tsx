@@ -2,9 +2,9 @@
 
 import { useEffect } from 'react';
 import { useDashboardContext } from '@/context/DashboardContext';
-import Upload from '@/components/Upload';
-import Encrypt from '@/components/Encrypt';
-import Home from '@/components/Home';
+import Upload from '@/components/dashboard/Upload';
+import Encrypt from '@/components/dashboard/Encrypt';
+import Home from '@/components/dashboard/Home';
 
 export default function DashboardPage() {
     const {
