@@ -11,6 +11,8 @@ type DashboardContextType = {
     setIsUploadPage: (value: boolean) => void;
     isEncryptPage: boolean;
     setIsEncryptPage: (value: boolean) => void;
+    isViewDocumentsPage: boolean;
+    setIsViewDocumentsPage: (value: boolean) => void;
 };
 
 const DashboardContext = createContext<DashboardContextType | null>(null);
@@ -21,6 +23,7 @@ export const DashboardProvider = ({children}: { children: React.ReactNode }) => 
     const [isBeneficiary, setIsBeneficiary] = useState(false);
     const [isUploadPage, setIsUploadPage] = useState(false);
     const [isEncryptPage, setIsEncryptPage] = useState(false);
+    const [isViewDocumentsPage, setIsViewDocumentsPage] = useState(false);
 
     return (
         <DashboardContext.Provider value={{
@@ -31,7 +34,9 @@ export const DashboardProvider = ({children}: { children: React.ReactNode }) => 
             isUploadPage,
             setIsUploadPage,
             isEncryptPage,
-            setIsEncryptPage
+            setIsEncryptPage,
+            isViewDocumentsPage,
+            setIsViewDocumentsPage
         }
         }>
             {children}
@@ -46,3 +51,4 @@ export const useDashboardContext = () => {
     }
     return context;
 }
+

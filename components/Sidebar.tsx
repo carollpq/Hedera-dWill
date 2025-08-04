@@ -1,16 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
 import { Home, Upload, Lock } from 'lucide-react';
+import { useDashboardContext } from '@/context/DashboardContext';
 
 export default function Sidebar() {
-    const pathname = usePathname();
-    
+
+    const { isEncryptPage, isUploadPage, setIsEncryptPage, setIsUploadPage } = useDashboardContext();
+
+
     const navItems = [
-        { name: 'Home', href: '/dashboard', icon: Home },
-        { name: 'Upload', href: '/dashboard/upload', icon: Upload },
-        { name: 'Encrypt', href: '/dashboard/encrypt', icon: Lock },
+        { name: 'Home', onClick: () => { setIsUploadPage(false); setIsEncryptPage(false)}, icon: Home, isActive: !isUploadPage && !isEncryptPage },
+        { name: 'Upload', onClick: () => { setIsUploadPage(true); setIsEncryptPage(false)}, icon: Upload, isActive: isUploadPage && !isEncryptPage },
+        { name: 'Encrypt', onClick: () => { setIsEncryptPage(true); setIsUploadPage(false)}, icon: Lock, isActive: isEncryptPage && !isUploadPage },
     ];
 
     return (
@@ -19,12 +21,11 @@ export default function Sidebar() {
             <nav className="flex-1">
                 <ul className="space-y-2">
                     {navItems.map((item) => {
-                        const isActive = pathname === item.href;
+                        const isActive = item.isActive;
                         return (
                             <li key={item.name}>
-                                <Link
-                                    href={item.href}
-                                    className={`flex items-center p-3 rounded-lg transition-colors ${
+                                <div onClick={item.onClick}
+                                    className={`flex items-center p-3 rounded-lg transition-colors hover:cursor-pointer ${
                                         isActive
                                             ? 'bg-blue-600 text-white'
                                             : 'text-gray-300 hover:bg-gray-800 hover:text-white'
@@ -32,7 +33,7 @@ export default function Sidebar() {
                                 >
                                     <item.icon className="w-5 h-5 mr-3" />
                                     {item.name}
-                                </Link>
+                                </div>
                             </li>
                         );
                     })}
