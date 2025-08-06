@@ -43,26 +43,38 @@ export const switchToHederaNetwork = async (ethereum: any) => {
   }
 }
 
-const { ethereum } = window as any;
 const getProvider = () => {
+  if (typeof window === 'undefined') {
+    throw new Error("Window is undefined – this code must run in the browser.");
+  }
+
+  const { ethereum } = window as any;
+
   if (!ethereum) {
     throw new Error("Metamask is not installed! Go install the extension!");
   }
 
   return new ethers.providers.Web3Provider(ethereum);
-}
+};
+
 
 // returns a list of accounts
 // otherwise empty array
 export const connectToMetamask = async () => {
   const provider = getProvider();
 
-  // keep track of accounts returned
-  let accounts: string[] = []
+  let accounts: string[] = [];
 
   try {
-    await switchToHederaNetwork(ethereum);
-    accounts = await provider.send("eth_requestAccounts", []);
+    // Make sure this code only runs in the browser
+    if (typeof window !== "undefined" && (window as any).ethereum) {
+      const ethereum = (window as any).ethereum;
+
+      await switchToHederaNetwork(ethereum);
+      accounts = await provider.send("eth_requestAccounts", []);
+    } else {
+      throw new Error("Metamask (window.ethereum) is not available.");
+    }
   } catch (error: any) {
     if (error.code === 4001) {
       // EIP-1193 userRejectedRequest error
@@ -73,7 +85,8 @@ export const connectToMetamask = async () => {
   }
 
   return accounts;
-}
+};
+
 
 class MetaMaskWallet implements WalletInterface {
   private convertAccountIdToSolidityAddress(accountId: AccountId): string {
@@ -205,18 +218,21 @@ export const metamaskWallet = new MetaMaskWallet();
 export const MetaMaskClient = () => {
   const { setMetamaskAccountAddress } = useContext(MetamaskContext);
   useEffect(() => {
-    // set the account address if already connected
-    try {
-      const provider = getProvider();
-      provider.listAccounts().then((signers) => {
-        if (signers.length !== 0) {
-          setMetamaskAccountAddress(signers[0]);
-        } else {
-          setMetamaskAccountAddress("");
-        }
-      });
+  if (typeof window === 'undefined') return;
 
-      // listen for account changes and update the account address
+  try {
+    const provider = getProvider();
+    provider.listAccounts().then((signers) => {
+      if (signers.length !== 0) {
+        setMetamaskAccountAddress(signers[0]);
+      } else {
+        setMetamaskAccountAddress("");
+      }
+    });
+
+    const { ethereum } = window as any;
+
+    if (ethereum?.on) {
       ethereum.on("accountsChanged", (accounts: string[]) => {
         if (accounts.length !== 0) {
           setMetamaskAccountAddress(accounts[0]);
@@ -224,15 +240,17 @@ export const MetaMaskClient = () => {
           setMetamaskAccountAddress("");
         }
       });
+    }
 
-      // cleanup by removing listeners
-      return () => {
+    return () => {
+      if (ethereum?.removeAllListeners) {
         ethereum.removeAllListeners("accountsChanged");
       }
-    } catch (error: any) {
-      console.error(error.message ? error.message : error);
-    }
-  }, [setMetamaskAccountAddress]);
+    };
+  } catch (error: any) {
+    console.error(error.message ? error.message : error);
+  }
+}, [setMetamaskAccountAddress]);
 
   return null;
 }
