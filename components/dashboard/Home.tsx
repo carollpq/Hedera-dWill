@@ -1,5 +1,7 @@
 import { FileText, Lock, Upload as UploadIcon, Users } from "lucide-react";
 import { useDashboardContext } from "@/context/DashboardContext";
+import HeaderWithActions from "@/components/HeaderWithActions";
+import { useWalletConnect } from "@/hooks/useWalletConnect";
 
 export default function Home() {
     const {
@@ -10,11 +12,13 @@ export default function Home() {
         setIsAssignBeneficiariesPage, isAssignBeneficiariesPage,
     } = useDashboardContext();
 
+    const { accountId, open, setOpen, handleConnect } = useWalletConnect();
+    
     return (
         <div className="space-y-8">
             {/* Dashboard Header */}
+            <HeaderWithActions title="Dashboard" />
             <div className="rounded-xl shadow-sm p-6">
-                <h1 className="text-3xl font-bold text-white-900">Welcome back!</h1>
                 <p className="text-white/80 text-600 mt-2">
                     Manage your documents and encryption settings from your dashboard.
                 </p>
@@ -30,9 +34,9 @@ export default function Home() {
                     <div className="p-3 bg-blue-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
                         <FileText className="w-6 h-6 text-blue-600" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900">View Documents</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">View Assets</h3>
                     <p className="text-gray-600 mt-1 text-sm">
-                        Browse and manage all your uploaded documents in one place.
+                        Browse and manage all your uploaded assets in one place.
                     </p>
                 </div>
 
@@ -44,9 +48,9 @@ export default function Home() {
                     <div className="p-3 bg-green-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
                         <UploadIcon className="w-6 h-6 text-green-600" />
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900">Upload Files</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">Upload Assets</h3>
                     <p className="text-gray-600 mt-1 text-sm">
-                        Securely upload new documents to your storage.
+                        Securely upload new assets to your storage.
                     </p>
                 </div>
 
@@ -60,7 +64,7 @@ export default function Home() {
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900">Encrypt Files</h3>
                     <p className="text-gray-600 mt-1 text-sm">
-                        Protect your sensitive documents with encryption.
+                        Protect your sensitive files with encryption.
                     </p>
                 </div>
 
@@ -74,7 +78,7 @@ export default function Home() {
                     </div>
                     <h3 className="text-lg font-semibold text-gray-900">Assign Beneficiaries</h3>
                     <p className="text-gray-600 mt-1 text-sm">
-                        Assign your beneficiaries and their inheritance.
+                        Assign beneficiaries and their inheritance.
                     </p>
                 </div>
             </div>

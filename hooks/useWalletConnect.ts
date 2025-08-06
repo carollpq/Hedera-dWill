@@ -7,7 +7,7 @@ export function useWalletConnect() {
 
   const handleConnect = async () => {
     if (accountId) {
-      walletInterface.disconnect();
+      walletInterface?.disconnect(); // use optional chaining
     } else {
       setOpen(true);
     }
@@ -24,5 +24,6 @@ export function useWalletConnect() {
     open,
     setOpen,
     handleConnect,
+    walletInterface,
   };
 }

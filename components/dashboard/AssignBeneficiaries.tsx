@@ -1,8 +1,9 @@
-// app/dashboard/assign-beneficiaries/page.tsx
 "use client";
 
 import { useState } from "react";
 import { Plus } from "lucide-react";
+import HeaderWithActions from "@/components/HeaderWithActions";
+import { useWalletConnect } from "@/hooks/useWalletConnect";
 
 interface Beneficiary {
   name: string;
@@ -15,6 +16,7 @@ export default function AssignBeneficiaries() {
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
   const [newName, setNewName] = useState("");
   const [newAddress, setNewAddress] = useState("");
+  const { accountId, open, setOpen, handleConnect } = useWalletConnect();
 
   const handleAdd = () => {
     if (newAddress.trim()) {
@@ -34,34 +36,47 @@ export default function AssignBeneficiaries() {
 
   return (
     <div className="space-y-6 p-6">
-      <h1 className="text-3xl font-bold text-gray-900">Assign Beneficiaries</h1>
+      <HeaderWithActions title="Assign Beneficiaries" />
 
       {/* Input Section */}
       <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
-        <h2 className="text-lg font-semibold text-gray-900 mb-2">Add New Beneficiary</h2>
+      <h2 className="text-lg font-semibold text-gray-900 mb-2">Add New Beneficiary</h2>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Beneficiary Name (optional)
+        </label>
         <input
           type="text"
-          placeholder="Beneficiary Name (optional)"
+          placeholder="e.g. Alice"
           value={newName}
           onChange={(e) => setNewName(e.target.value)}
           className="w-full border border-gray-300 rounded-lg p-2"
         />
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Beneficiary Address <span className="text-red-500">*</span>
+        </label>
         <input
           type="text"
-          placeholder="Beneficiary Address"
+          placeholder="0.0.xxxxx or 0x..."
           value={newAddress}
           onChange={(e) => setNewAddress(e.target.value)}
           className="w-full border border-gray-300 rounded-lg p-2"
         />
-        <button
-          onClick={handleAdd}
-          disabled={!newAddress.trim()}
-          className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg py-2 font-semibold hover:bg-blue-700 transition"
-        >
-          <Plus className="w-4 h-4" />
-          Add Beneficiary
-        </button>
       </div>
+
+      <button
+        onClick={handleAdd}
+        disabled={!newAddress.trim()}
+        className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg py-2 font-semibold hover:bg-blue-700 transition"
+      >
+        <Plus className="w-4 h-4" />
+        Add Beneficiary
+      </button>
+    </div>
 
       {/* Grid Section */}
       <div className="bg-white rounded-xl shadow p-6">

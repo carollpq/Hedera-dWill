@@ -2,6 +2,8 @@
 
 import React, { useRef, useState } from "react";
 import { FileText, Lock, X } from "lucide-react";
+import HeaderWithActions from "@/components/HeaderWithActions";
+import { useWalletConnect } from "@/hooks/useWalletConnect";
 
 // Encrypt component allows users to drag & drop a file, enter recipient info, and encrypt/download the file
 export default function Encrypt() {
@@ -11,6 +13,8 @@ export default function Encrypt() {
   const [beneficiaryName, setBeneficiaryName] = useState("");
   const [beneficiaryAddress, setBeneficiaryAddress] = useState("");
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const { accountId, open, setOpen, handleConnect } = useWalletConnect();
 
   // Handle drag events to highlight drop area
   const handleDrag = (e: React.DragEvent<HTMLDivElement>) => {
@@ -50,9 +54,7 @@ export default function Encrypt() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="rounded-xl shadow-sm p-6">
-        <h1 className="text-3xl font-bold text-white-900">Encrypt</h1>
-      </div>
+      <HeaderWithActions title="Encrypt" />
 
       {/* Drag and Drop Section */}
       <div

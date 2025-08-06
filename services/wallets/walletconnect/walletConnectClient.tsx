@@ -1,13 +1,30 @@
 "use client";
 
+import { PrivateKey } from "@hashgraph/sdk"; //used for types to make a dummy operator for a query to fetch public key
 import { WalletConnectContext } from "../../../context/WalletConnectContext";
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext, useEffect } from "react";
 import { WalletInterface } from "../walletInterface";
-import { AccountId, ContractExecuteTransaction, ContractId, LedgerId, TokenAssociateTransaction, TokenId, TransferTransaction, Client } from "@hashgraph/sdk";
+import {
+  AccountId,
+  ContractExecuteTransaction,
+  Transaction,
+  ContractId,
+  LedgerId,
+  TokenAssociateTransaction,
+  TokenId,
+  TransferTransaction,
+  Client,
+  AccountInfoQuery,
+} from "@hashgraph/sdk";
 import { ContractFunctionParameterBuilder } from "../contractFunctionParameterBuilder";
 import { appConfig } from "../../../config";
 import { SignClientTypes } from "@walletconnect/types";
-import { DAppConnector, HederaJsonRpcMethod, HederaSessionEvent, HederaChainId } from "@hashgraph/hedera-wallet-connect";
+import {
+  DAppConnector,
+  HederaJsonRpcMethod,
+  HederaSessionEvent,
+  HederaChainId,
+} from "@hashgraph/hedera-wallet-connect";
 import EventEmitter from "events";
 
 const refreshEvent = new EventEmitter();
@@ -20,7 +37,7 @@ let dappConnector: DAppConnector;
 let walletConnectInitPromise: Promise<void> | undefined = undefined;
 
 const initializeWalletConnect = async () => {
-  if (typeof window === 'undefined') return;
+  if (typeof window === "undefined") return;
 
   if (!dappConnector) {
     const metadata: SignClientTypes.Metadata = {
@@ -36,7 +53,7 @@ const initializeWalletConnect = async () => {
       walletConnectProjectId,
       Object.values(HederaJsonRpcMethod),
       [HederaSessionEvent.ChainChanged, HederaSessionEvent.AccountsChanged],
-      [HederaChainId.Testnet],
+      [HederaChainId.Testnet]
     );
   }
 
@@ -57,7 +74,7 @@ export const openWalletConnectModal = async () => {
 class WalletConnectWallet implements WalletInterface {
   private getSigner() {
     if (!dappConnector || dappConnector.signers.length === 0) {
-      throw new Error('No signers found!');
+      throw new Error("No signers found!");
     }
     return dappConnector.signers[0];
   }
@@ -109,7 +126,12 @@ class WalletConnectWallet implements WalletInterface {
     return result ? result.transactionId : null;
   }
 
-  async executeContractFunction(contractId: ContractId, functionName: string, functionParameters: ContractFunctionParameterBuilder, gasLimit: number) {
+  async executeContractFunction(
+    contractId: ContractId,
+    functionName: string,
+    functionParameters: ContractFunctionParameterBuilder,
+    gasLimit: number
+  ) {
     const tx = new ContractExecuteTransaction()
       .setContractId(contractId)
       .setGas(gasLimit)
@@ -119,6 +141,20 @@ class WalletConnectWallet implements WalletInterface {
     await tx.freezeWithSigner(signer);
     const result = await tx.executeWithSigner(signer);
     return result ? result.transactionId : null;
+  }
+
+  async signTransaction(tx: Transaction): Promise<Transaction> {
+    const signer = this.getSigner();
+    await tx.freezeWithSigner(signer);
+    return tx.signWithSigner(signer);
+  }
+
+  async getPublicKey(): Promise<string> {
+    const publicKey = localStorage.getItem("publicKey");
+    if (!publicKey) {
+      throw new Error("Public key not found in localStorage. Please sign in again.");
+    }
+    return publicKey;
   }
 
   disconnect() {
@@ -131,18 +167,20 @@ class WalletConnectWallet implements WalletInterface {
 export const walletConnectWallet = new WalletConnectWallet();
 
 export const WalletConnectClient = () => {
-  const { setAccountId, setIsConnected } = useContext(WalletConnectContext);
+  const { setAccountId, setIsConnected, setPublicKey } = useContext(WalletConnectContext);
 
-  const syncWithWalletConnectContext = useCallback(() => {
+  const syncWithWalletConnectContext = useCallback(async () => {
     const accountId = dappConnector?.signers[0]?.getAccountId()?.toString();
     if (accountId) {
       setAccountId(accountId);
       setIsConnected(true);
+
     } else {
-      setAccountId('');
+      setAccountId("");
       setIsConnected(false);
+      setPublicKey("");
     }
-  }, [setAccountId, setIsConnected]);
+  }, [setAccountId, setIsConnected, setPublicKey]);
 
   useEffect(() => {
     refreshEvent.addListener("sync", syncWithWalletConnectContext);
