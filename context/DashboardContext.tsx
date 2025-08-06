@@ -14,6 +14,8 @@ type DashboardContextType = {
     setIsEncryptPage: (value: boolean) => void;
     isViewDocumentsPage: boolean;
     setIsViewDocumentsPage: (value: boolean) => void;
+    isAssignBeneficiariesPage: boolean;
+    setIsAssignBeneficiariesPage: (value: boolean) => void;
 };
 
 // Create the context with a default value of null
@@ -27,6 +29,7 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
     const [isUploadPage, setIsUploadPage] = useState(false);
     const [isEncryptPage, setIsEncryptPage] = useState(false);
     const [isViewDocumentsPage, setIsViewDocumentsPage] = useState(false);
+    const [isAssignBeneficiariesPage, setIsAssignBeneficiariesPage] = useState(false);
 
     return (
         <DashboardContext.Provider value={{
@@ -39,7 +42,9 @@ export const DashboardProvider = ({ children }: { children: React.ReactNode }) =
             isEncryptPage,
             setIsEncryptPage,
             isViewDocumentsPage,
-            setIsViewDocumentsPage
+            setIsViewDocumentsPage,
+            isAssignBeneficiariesPage,
+            setIsAssignBeneficiariesPage
         }}>
             {children}
         </DashboardContext.Provider>

@@ -1,12 +1,13 @@
-import { FileText, Lock, Upload as UploadIcon } from "lucide-react";
+import { FileText, Lock, Upload as UploadIcon, Users } from "lucide-react";
 import { useDashboardContext } from "@/context/DashboardContext";
 
 export default function Home() {
-    // Destructure dashboard context for navigation and state management
     const {
         isBenefactor, setIsBenefactor, isEncryptPage,
         setIsEncryptPage, isUploadPage, setIsUploadPage,
-        setIsBeneficiary, isBeneficiary, isViewDocumentsPage, setIsViewDocumentsPage
+        setIsBeneficiary, isBeneficiary,
+        isViewDocumentsPage, setIsViewDocumentsPage,
+        setIsAssignBeneficiariesPage, isAssignBeneficiariesPage,
     } = useDashboardContext();
 
     return (
@@ -62,13 +63,26 @@ export default function Home() {
                         Protect your sensitive documents with encryption.
                     </p>
                 </div>
+
+                {/* Assign Beneficiaries Card */}
+                <div
+                    onClick={() => setIsAssignBeneficiariesPage(true)}
+                    className="bg-white rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow hover:cursor-pointer"
+                >
+                    <div className="p-3 bg-yellow-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                        <Users className="w-6 h-6 text-yellow-600" />
+                    </div>
+                    <h3 className="text-lg font-semibold text-gray-900">Assign Beneficiaries</h3>
+                    <p className="text-gray-600 mt-1 text-sm">
+                        Assign your beneficiaries and their inheritance.
+                    </p>
+                </div>
             </div>
 
             {/* Recent Activity Section */}
             <div className="bg-white rounded-xl shadow-sm p-6">
                 <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h2>
                 <div className="space-y-4">
-                    {/* Example activity item */}
                     <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
                         <div className="flex items-center space-x-3">
                             <div className="p-2 bg-blue-100 rounded-lg">

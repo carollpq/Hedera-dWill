@@ -5,6 +5,7 @@ import { useDashboardContext } from '@/context/DashboardContext';
 import Upload from '@/components/dashboard/Upload';
 import Encrypt from '@/components/dashboard/Encrypt';
 import Home from '@/components/dashboard/Home';
+import AssignBeneficiaries from "@/components/dashboard/AssignBeneficiaries";
 
 export default function DashboardPage() {
     const {
@@ -17,7 +18,9 @@ export default function DashboardPage() {
         setIsBeneficiary, 
         isBeneficiary, 
         isViewDocumentsPage, 
-        setIsViewDocumentsPage
+        setIsViewDocumentsPage,
+        isAssignBeneficiariesPage,
+        setIsAssignBeneficiariesPage
     } = useDashboardContext();
 
     // Reset page states when component mounts
@@ -25,14 +28,16 @@ export default function DashboardPage() {
         // Set default states when the dashboard loads
         setIsUploadPage(false);
         setIsEncryptPage(false);
+        setIsAssignBeneficiariesPage(false);
         // Add any other default state resets here
         
         // Cleanup function to reset states when component unmounts
         return () => {
             setIsUploadPage(false);
             setIsEncryptPage(false);
+            setIsAssignBeneficiariesPage(false);
         };
-    }, [setIsUploadPage, setIsEncryptPage]);
+    }, [setIsUploadPage, setIsEncryptPage, setIsAssignBeneficiariesPage]);
 
     // Handle page changes based on navigation
     useEffect(() => {
@@ -44,6 +49,8 @@ export default function DashboardPage() {
         } else if (isEncryptPage) {
             // Handle encrypt page specific logic
             console.log('Encrypt page active');
+        } else if (isAssignBeneficiariesPage) {
+            console.log('Assign Beneficiaries page active');
         } else {
             // Handle home page specific logic
             console.log('Home page active');
@@ -54,7 +61,8 @@ export default function DashboardPage() {
         <>
             {isUploadPage && <Upload />}
             {isEncryptPage && <Encrypt />}
-            {!isUploadPage && !isEncryptPage && <Home />}
+            {isAssignBeneficiariesPage && <AssignBeneficiaries />}
+            {!isUploadPage && !isAssignBeneficiariesPage && !isEncryptPage && <Home />}
         </>
     );
 }
