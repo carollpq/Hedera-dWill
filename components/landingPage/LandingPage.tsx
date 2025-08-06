@@ -3,7 +3,7 @@
 import {Newsreader, Nixie_One} from "next/font/google";
 import Image from "next/image";
 import NavBtn from "@/components/NavBtn";
-import ScrollIndicator from "@/components/ScrollIndicator";
+import ScrollIndicator from "../ScrollIndicator";
 import React from "react";
 
 const newsreader = Newsreader({ subsets: ['latin'] });

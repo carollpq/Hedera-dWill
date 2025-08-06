@@ -1,7 +1,6 @@
 import React from 'react';
 import {Newsreader} from "next/font/google";
 import Image from "next/image";
-import Link from "next/link";
 
 const newsreader = Newsreader({subsets: ['latin']});
 
@@ -29,17 +28,15 @@ export default function RoleCard({title, src, alt, btnText, status, className = 
                 <div className="w-32 h-32 relative overflow-hidden flex flex-col justify-center items-center">
                     <Image src={src} alt={alt} width={300} height={300}/>
                 </div>
-                <Link 
-                    href={title.includes('benefactor') ? '/dashboard/benefactor' : '/dashboard/beneficiary'}
-                    className="w-44 h-14 py-2 relative bg-fuchsia-500/10 bg-gradient-to-br from-black/50 to-black/0 rounded-lg shadow-[0px_12px_34px_0px_rgba(0,0,0,0.25)] outline outline-black/50 hover:outline-white/50 backdrop-blur-blur inline-flex justify-center items-center gap-2"
-                >
+                <div data-property-1="cta"
+                     className="w-44 h-14 py-2 relative bg-fuchsia-500/10 bg-gradient-to-br from-black/50 to-black/0 rounded-lg shadow-[0px_12px_34px_0px_rgba(0,0,0,0.25)] outline outline-black/50 hover:outline-white/50 backdrop-blur-blur inline-flex justify-center items-center gap-2">
                     <span className="align-middle text-white text-xl font-normal font-['Quicksand']">{btnText}</span>
-                </Link>
+                </div>
                 <div className="w-48 text-center justify-start">
                     <span
                     className="text-white/70 text-xl font-normal font-['Quicksand']">Already {status}? </span>
-                    <Link href="/dashboard"
-                    className="text-white/70 text-xl font-normal font-['Quicksand'] underline">Go to dashboard</Link>
+                    <span
+                    className="text-white/70 text-xl font-normal font-['Quicksand'] underline">Go to dashboard</span>
                 </div>
             </div>
         </div>

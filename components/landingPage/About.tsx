@@ -1,5 +1,6 @@
 import {Newsreader} from "next/font/google";
 import Image from "next/image";
+import ScrollIndicator from "@/components/ScrollIndicator";
 
 const newsreader = Newsreader({subsets: ['latin']});
 

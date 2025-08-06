@@ -1,6 +1,7 @@
 "use client";
 
 import {Newsreader} from "next/font/google";
+import GlassCard from "@/components/GlassCard";
 import RoleCard from "@/components/RoleCard";
 
 const newsreader = Newsreader({ subsets: ['latin'] });
