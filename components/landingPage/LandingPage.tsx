@@ -35,7 +35,7 @@ export default function LandingPage({floatingAnimation}: LandingPageProps) {
                         dWill<sup>H</sup>
                     </h1>
                     <h2 className={`text-4xl ${nixieOne.className}`}>
-                        Decentralized Inheritance
+                         Decentralized inℏeritance
                     </h2>
                     <motion.div className="flex flex-row items-start" initial={{opacity: 0, y: 20}}
                                 animate={{opacity: 1, y: 0}}

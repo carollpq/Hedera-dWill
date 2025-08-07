@@ -14,7 +14,9 @@ import {
     PrivateKey,
     AccountId,
     Client,
-    FileContentsQuery
+    FileContentsQuery,
+    TokenAssociateTransaction,
+    TransferTransaction
 } from "@hashgraph/sdk";
 import { useWalletInterface } from "@/services/wallets/useWalletInterface";
 
@@ -65,6 +67,7 @@ export default function Upload() {
             const fileBytes = new Uint8Array(arrayBuffer);
 
             const pubKey = await walletInterface.getPublicKey();
+            console.log(`publicKey: ${pubKey} `);
             const PRIVATE_KEY = PrivateKey.fromStringECDSA("7693a736f38b0aef4766a6380e7fbbb3b30e5cb64233e2b980cfa9d285fb2201");
             const client = Client.forTestnet();
             client.setOperator(accountId, PRIVATE_KEY);
@@ -98,46 +101,54 @@ export default function Upload() {
 
 
             // 2. Assign file to beneficiary
-
-
             // 2. Create NFT
+            const nftCreateTx = await new TokenCreateTransaction()
+                .setTokenName("DWill Document NFT")
+                .setTokenSymbol("DWNFT")
+                .setTokenType(TokenType.NonFungibleUnique)
+                .setDecimals(0)
+                .setInitialSupply(0)
+                .setSupplyType(TokenSupplyType.Finite)
+                .setMaxSupply(1)
+                .setTreasuryAccountId(AccountId.fromString(accountId))
+                .setAdminKey(PublicKey.fromString(pubKey))
+                .setSupplyKey(PublicKey.fromString(pubKey))
+                .setMaxTransactionFee(new Hbar(10))
+                // .freezeWith(client);
+
+            const nftCreateSigned = await walletInterface.signTransaction(nftCreateTx);
+            const nftCreateSubmit = await nftCreateSigned.execute(client);
+            const nftCreateReceipt = await nftCreateSubmit.getReceipt(client);
+            const tokenId = nftCreateReceipt.tokenId;
+            console.log("NFT TokenID:", tokenId?.toString());
             
-            // const nftCreateTx = new TokenCreateTransaction()
-            //     .setTokenName("DWill Document NFT")
-            //     .setTokenSymbol("DWNFT")
-            //     .setTokenType(TokenType.NonFungibleUnique)
-            //     .setSupplyType(TokenSupplyType.Finite)
-            //     .setMaxSupply(1)
-            //     .setTreasuryAccountId(AccountId.fromString(accountId))
-            //     .setAdminKey(PublicKey.fromString(pubKey))
-            //     .setSupplyKey(PublicKey.fromString(pubKey))
-            //     .setMaxTransactionFee(new Hbar(10))
-            //     // .freezeWith(client);
+            const currentPubKey = await walletInterface.getPublicKey();
+            console.log("Connected Wallet Public Key:", currentPubKey);
 
+            // 3. Mint NFT with fileId as metadata
+            const metadata = Buffer.from(`fileId:${fileId}`);
+            const mintTx = await new TokenMintTransaction()
+                .setTokenId(tokenId!)
+                .setMetadata([metadata])
+                .setMaxTransactionFee(new Hbar(10))
+                // .freezeWith(client);
 
-            // const createSigned = await walletInterface.signTransaction(nftCreateTx);
-            // const createSubmit = await createSigned.execute(client);
-            // const createReceipt = await createSubmit.getReceipt(client);
-            // const tokenId = createReceipt.tokenId;
-            // console.log("NFT TokenID:", tokenId?.toString());
+            const mintSigned = await walletInterface.signTransaction(mintTx);
+            const mintSubmit = await mintSigned.execute(client);
+            const mintReceipt = await mintSubmit.getReceipt(client);
+            console.log("NFT Minted. Serial:", mintReceipt.serials?.toString());
 
-            // // 3. Mint NFT
-            // const metadata = Buffer.from(`fileId:${fileId}`);
-            // // const client = Client.forTestnet();
-            // const mintTx = new TokenMintTransaction()
-            //     .setTokenId(tokenId!)
-            //     .setMetadata([metadata])
-            //     .setMaxTransactionFee(new Hbar(10))
-            //     // .freezeWith(client);
+            // 5. Transfer NFT from you (treasury) to beneficiary
+            const transferTx = await new TransferTransaction()
+                .addNftTransfer(tokenId!, 1, accountId, beneficiaryAddress)
+                // .freezeWith(client);
 
+            const transferSigned = await walletInterface.signTransaction(transferTx);
+            const transferSubmit = await transferSigned.execute(client);
+            const transferReceipt = await transferSubmit.getReceipt(client);
+            console.log(`NFT transferred to beneficiary: ${transferReceipt.status.toString()}`);
 
-            // const mintSigned = await walletInterface.signTransaction(mintTx);
-            // const mintSubmit = await mintSigned.execute(client);
-            // const mintReceipt = await mintSubmit.getReceipt(client);
-            // console.log("NFT Minted. Serial:", mintReceipt.serials?.toString());
-
-            // alert("NFT Minted and stored with benefactor");
-        } catch (err) {
+            } catch (err) {
             console.error("Error during NFT minting:", err);
             alert("Something went wrong.");
         }
