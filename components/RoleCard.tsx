@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Newsreader } from "next/font/google";
 import Image from "next/image";
 
@@ -9,9 +9,9 @@ interface RoleCardProps {
     src: string;
     alt: string;
     btnText: string;
-    status: string;
     className?: string;
     onClick?: () => void;
+    children?: ReactNode;
 }
 
 export default function RoleCard({
@@ -19,9 +19,9 @@ export default function RoleCard({
     src,
     alt,
     btnText,
-    status,
     className = '',
     onClick,
+    children
 }: RoleCardProps) {
     return (
         <div
@@ -39,6 +39,7 @@ export default function RoleCard({
                     <Image src={src} alt={alt} width={300} height={300} />
                 </div>
                 {/* ✅ Button now triggers onClick */}
+                {children}
                 <button
                     onClick={onClick}
                     data-property-1="cta"

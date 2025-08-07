@@ -1,7 +1,7 @@
 import { Button, Dialog, Stack } from "@mui/material";
-import { openWalletConnectModal } from "../services/wallets/walletconnect/walletConnectClient";
+import { openWalletConnectModal } from "@/services/wallets/walletconnect/walletConnectClient";
 import MetamaskLogo from "/public/metamask-logo.svg";
-import WalletConnectLogo from "/public/walletconnect-logo.svg";
+import Image from "next/image";
 
 
 interface WalletSelectionDialogProps {
@@ -23,10 +23,12 @@ export const WalletSelectionDialog = (props: WalletSelectionDialogProps) => {
             setOpen(false);
           }}
         >
-          <img
-            src={WalletConnectLogo}
+          <Image
+            src="/walletconnect-logo.svg"
             alt='walletconnect logo'
             className='walletLogoImage'
+            width={20}
+            height={20}
             style={{
               marginLeft: '-6px'
             }}
