@@ -33,7 +33,6 @@ export default function Home() {
       <LandingPage />
       <About />
       <Services />
-      <RoleSelection />
     </main>
   );
 }
