@@ -72,14 +72,14 @@ export const openWalletConnectModal = async () => {
 };
 
 class WalletConnectWallet implements WalletInterface {
-  private getSigner() {
+  public getSigner() {
     if (!dappConnector || dappConnector.signers.length === 0) {
       throw new Error("No signers found!");
     }
     return dappConnector.signers[0];
   }
 
-  private getAccountId() {
+  public getAccountId() {
     return AccountId.fromString(this.getSigner().getAccountId().toString());
   }
 

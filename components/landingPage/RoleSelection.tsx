@@ -29,8 +29,9 @@ export default function RoleSelection() {
             return;
         }
 
+
         localStorage.setItem("userRole", role);
-        localStorage.setItem("accoutnId", accountId);
+        localStorage.setItem("accountId", accountId);
         localStorage.setItem("publicKey", publicKey);
 
         router.push("/dashboard");

@@ -4,33 +4,152 @@ import { useState } from "react";
 import { Plus } from "lucide-react";
 import HeaderWithActions from "@/components/HeaderWithActions";
 import { useWalletConnect } from "@/hooks/useWalletConnect";
+import { walletConnectWallet } from "@/services/wallets/walletconnect/walletConnectClient";
+
+import {
+  AccountAllowanceApproveTransaction,
+  TransferTransaction,
+  Hbar,
+  HbarUnit ,
+  Client,
+  PrivateKey,
+  TransactionId,
+  ScheduleCreateTransaction,
+  ScheduleSignTransaction,
+  AccountId
+} from "@hashgraph/sdk";
+
+const client = Client.forTestnet();
+client.setOperator(
+  AccountId.fromString(process.env.NEXT_PUBLIC_OPERATOR_ID!),
+  PrivateKey.fromString(process.env.NEXT_PUBLIC_OPERATOR_KEY!)
+);
+
+
 
 interface Beneficiary {
   name: string;
   address: string;
-  files: string[]; // Replace with file names or IDs
-  funds: number;   // Replace with real token data
+  files: string[];
+  funds: number; // HBAR
 }
 
 export default function AssignBeneficiaries() {
   const [beneficiaries, setBeneficiaries] = useState<Beneficiary[]>([]);
   const [newName, setNewName] = useState("");
   const [newAddress, setNewAddress] = useState("");
+  const [newFunds, setNewFunds] = useState(""); // Track HBAR input
   const { accountId, open, setOpen, handleConnect } = useWalletConnect();
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (newAddress.trim()) {
+      const funds = parseFloat(newFunds);
       setBeneficiaries((prev) => [
         ...prev,
         {
           name: newName || "Unnamed",
           address: newAddress,
           files: [],
-          funds: 0,
+          funds: isNaN(funds) ? 0 : funds,
         },
       ]);
+      await approveHBARAllowance([
+      ...beneficiaries,
+      {
+        name: newName || "Unnamed",
+        address: newAddress,
+        files: [],
+        funds: isNaN(funds) ? 0 : funds,
+      }
+    ]);
       setNewName("");
       setNewAddress("");
+      setNewFunds(""); // Reset input
+    }
+  };
+
+  const approveHBARAllowance = async (beneficiariesToUse = beneficiaries) => {
+    try {
+      for (const b of beneficiariesToUse) {
+        if (b.funds > 0) {
+          const tx = new AccountAllowanceApproveTransaction()
+            .approveHbarAllowance(accountId!, b.address, Hbar.from(b.funds, HbarUnit.Hbar))
+            .setTransactionId(TransactionId.generate(accountId!)) // important for wallet signing
+            .setNodeAccountIds([new AccountId(5)]) // since error mentions node 0.0.5
+            .freezeWith(client);
+
+          // Get bytes to send to wallet
+          const txBytes = tx.toBytes();
+          const signer = walletConnectWallet['getSigner'](); // Access the private method (see below if you want to make it public)
+
+          // Sign with WalletConnect-connected wallet
+          const response = await tx.executeWithSigner(signer); // <- your custom wallet hook method
+
+          const receipt = await response.getReceipt(client);
+          console.log(`Allowance set for ${b.address}:`, receipt.status.toString());
+        }
+      }
+    } catch (error) {
+      console.error("Failed to approve allowance:", error);
+    }
+  };
+
+
+  // const transferHBARFromAllowance = async () => {
+  //   try {
+  //     for (const b of beneficiaries) {
+  //       if (b.funds > 0) {
+  //         const transferTx = new TransferTransaction()
+  //           .addApprovedHbarTransfer(accountId!, Hbar.from(b.funds, HbarUnit.Hbar).negated()) //to benefactor
+  //           .addHbarTransfer(b.address, Hbar.from(b.funds, HbarUnit.Hbar)) // to beneficiary
+  //           .freezeWith(client);
+  //         // Get bytes to send to wallet
+  //         const txBytes = transferTx.toBytes();
+  //         // Sign with WalletConnect-connected wallet
+  //         const response = await transferTx.execute(client);
+  //         const receipt = await response.getReceipt(client);
+  //         console.log(`Transferred ${b.funds} HBAR to ${b.address}:`, receipt.status.toString());
+  //       }
+  //     }
+  //   } catch (error) {
+  //     console.error("Transfer from allowance failed:", error);
+  //   }
+  // };
+
+  const scheduleTransferHBARFromAllowance = async (beneficiariesToUse = beneficiaries) => {
+    try {
+      for (const b of beneficiariesToUse) {
+        if (b.funds > 0) {
+          const transaction = new TransferTransaction()
+            .addApprovedHbarTransfer(accountId!, Hbar.from(b.funds, HbarUnit.Hbar).negated()) // from benefactor
+            .addHbarTransfer(b.address, Hbar.from(b.funds, HbarUnit.Hbar)) // to beneficiary
+            .setTransactionMemo(`Scheduled HBAR transfer to ${b.address}`);
+
+          // Wrap in ScheduleCreateTransaction
+          const scheduleTransaction = await new ScheduleCreateTransaction()
+              .setScheduledTransaction(transaction)
+              .execute(client);
+
+          const receipt = await scheduleTransaction.getReceipt(client);
+          const scheduleId = receipt.scheduleId;
+          const scheduledTxId = receipt.scheduledTransactionId;
+
+          const signature1 = await (await new ScheduleSignTransaction()
+              .setScheduleId(scheduleId)
+              .freezeWith(client)
+              .sign(signerKey1))
+              .execute(client);
+          const receipt1 = await signature1.getReceipt(client);
+
+          const query2 = await new ScheduleInfoQuery()
+              .setScheduleId(scheduleId)
+              .execute(client);
+          const scheduledTxRecord = await TransactionId.fromString(scheduledTxId.toString()).getRecord(client);
+
+        }
+      }
+    } catch (error) {
+      console.error("Scheduling transfer from allowance failed:", error);
     }
   };
 
@@ -40,43 +159,62 @@ export default function AssignBeneficiaries() {
 
       {/* Input Section */}
       <div className="bg-black/60 rounded-xl shadow-sm p-6 space-y-4">
-      <h2 className="text-lg font-semibold text-white mb-2">Add New Beneficiary</h2>
+        <h2 className="text-lg font-semibold text-white mb-2">Add New Beneficiary</h2>
 
-      <div>
-        <label className="block text-sm font-medium text-white/70 mb-1">
-          Beneficiary Name (optional)
-        </label>
-        <input
-          type="text"
-          placeholder="e.g. Alice"
-          value={newName}
-          onChange={(e) => setNewName(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg p-2"
-        />
+        <div>
+          <label className="block text-sm font-medium text-white/70 mb-1">
+            Beneficiary Name (optional)
+          </label>
+          <input
+            type="text"
+            placeholder="e.g. Alice"
+            value={newName}
+            onChange={(e) => setNewName(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg p-2"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-white/70 mb-1">
+            Beneficiary Address <span className="text-red-500">*</span>
+          </label>
+          <input
+            type="text"
+            placeholder="0.0.xxxxx or 0x..."
+            value={newAddress}
+            onChange={(e) => setNewAddress(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg p-2"
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-white/70 mb-1">
+            HBAR Funds (optional)
+          </label>
+          <input
+            type="number"
+            placeholder="e.g. 10"
+            value={newFunds}
+            onChange={(e) => setNewFunds(e.target.value)}
+            className="w-full border border-gray-300 rounded-lg p-2"
+            min="0"
+          />
+        </div>
+
+        <button
+          onClick={handleAdd}
+          disabled={!newAddress.trim()}
+          className="hover:cursor-pointer w-full flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg py-2 font-semibold hover:bg-blue-800 transition"
+        >
+          <Plus className="w-4 h-4" />
+          Add Beneficiary
+        </button>
+        <button
+        onClick={transferHBARFromAllowance}
+        className="hover:cursor-pointer w-full flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg py-2 font-semibold hover:bg-blue-800 transition">
+          TRIAL TRANSFER HBAR
+        </button>
       </div>
-
-      <div>
-        <label className="block text-sm font-medium text-white/70 mb-1">
-          Beneficiary Address <span className="text-red-500">*</span>
-        </label>
-        <input
-          type="text"
-          placeholder="0.0.xxxxx or 0x..."
-          value={newAddress}
-          onChange={(e) => setNewAddress(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg p-2"
-        />
-      </div>
-
-      <button
-        onClick={handleAdd}
-        disabled={!newAddress.trim()}
-        className="hover:cursor-pointer w-full flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg py-2 font-semibold hover:bg-blue-800 transition"
-      >
-        <Plus className="w-4 h-4" />
-        Add Beneficiary
-      </button>
-    </div>
 
       {/* Grid Section */}
       <div className="bg-black/60 rounded-xl shadow p-6">

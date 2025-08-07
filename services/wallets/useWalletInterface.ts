@@ -11,7 +11,7 @@ export const useWalletInterface = () => {
   if (walletConnectCtx.accountId) {
     return {
       accountId: walletConnectCtx.accountId,
-      walletInterface: walletConnectWallet, // now includes publicKey, signTransaction
+      walletInterface: walletConnectWallet,
     };
   } else {
     return {

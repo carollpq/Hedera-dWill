@@ -16,6 +16,7 @@
     "@mui/material": "^7.3.0",
     "@walletconnect/modal": "^2.7.0",
     "@walletconnect/types": "^2.21.6",
+    "dotenv": "^17.2.1",
     "ethers": "^5.8.0",
     "framer-motion": "^12.23.12",
     "gsap": "^3.13.0",
@@ -25,6 +26,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-intersection-observer": "^9.16.0",
+    "solc": "^0.8.30",
     "wagmi": "^2.16.1"
   },
   "devDependencies": {
