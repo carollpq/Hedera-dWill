@@ -149,7 +149,7 @@ export default function Upload() {
 
             <div
                 className={`border-2 border-dashed rounded-xl p-8 flex flex-col items-center justify-center transition-colors relative ${
-                    dragActive ? "border-blue-500 bg-blue-50" : "border-gray-300 bg-white"
+                    dragActive ? "border-blue-500 bg-blue-50" : "border-gray-300 bg-black/60"
                 }`}
                 onDragEnter={handleDrag}
                 onDragOver={handleDrag}
@@ -165,7 +165,7 @@ export default function Upload() {
                     onChange={handleChange}
                 />
                 <UploadIcon className="w-8 h-8 text-blue-600 mb-2" />
-                <p className="text-gray-700 font-medium">
+                <p className="text-white/70 font-medium">
                     {file ? `Selected: ${file.name}` : "Drag & drop your file here, or click to select"}
                 </p>
                 {file && (
@@ -180,10 +180,10 @@ export default function Upload() {
                 )}
             </div>
 
-            <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
-                <h2 className="text-lg font-semibold text-gray-900 mb-4">Enter beneficiary address to assign to:</h2>
+            <div className="bg-black/60 rounded-xl shadow-sm p-6 space-y-4">
+                <h2 className="text-lg font-semibold text-white mb-4">Enter beneficiary address to assign to:</h2>
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-white/70 mb-1">
                     Beneficiary Name (optional)
                     </label>
                     <input
@@ -196,7 +196,7 @@ export default function Upload() {
                 </div>
 
                 <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                    <label className="block text-sm font-medium text-white/70 mb-1">
                     Beneficiary Address <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -208,7 +208,7 @@ export default function Upload() {
                     />
                 </div>
                 <button
-                    className="w-full bg-blue-600 text-white rounded-lg py-2 font-semibold hover:bg-blue-700 transition"
+                    className="w-full bg-blue-600 text-white rounded-lg py-2 font-semibold hover:bg-blue-800 transition hover:cursor-pointer"
                     onClick={handleUpload}
                     type="button"
                     disabled={!file || !beneficiaryAddress}

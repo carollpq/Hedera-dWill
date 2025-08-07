@@ -39,11 +39,11 @@ export default function AssignBeneficiaries() {
       <HeaderWithActions title="Assign Beneficiaries" />
 
       {/* Input Section */}
-      <div className="bg-white rounded-xl shadow-sm p-6 space-y-4">
-      <h2 className="text-lg font-semibold text-gray-900 mb-2">Add New Beneficiary</h2>
+      <div className="bg-black/60 rounded-xl shadow-sm p-6 space-y-4">
+      <h2 className="text-lg font-semibold text-white mb-2">Add New Beneficiary</h2>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-white/70 mb-1">
           Beneficiary Name (optional)
         </label>
         <input
@@ -56,7 +56,7 @@ export default function AssignBeneficiaries() {
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-white/70 mb-1">
           Beneficiary Address <span className="text-red-500">*</span>
         </label>
         <input
@@ -71,7 +71,7 @@ export default function AssignBeneficiaries() {
       <button
         onClick={handleAdd}
         disabled={!newAddress.trim()}
-        className="w-full flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg py-2 font-semibold hover:bg-blue-700 transition"
+        className="hover:cursor-pointer w-full flex items-center justify-center gap-2 bg-blue-600 text-white rounded-lg py-2 font-semibold hover:bg-blue-800 transition"
       >
         <Plus className="w-4 h-4" />
         Add Beneficiary
@@ -79,10 +79,10 @@ export default function AssignBeneficiaries() {
     </div>
 
       {/* Grid Section */}
-      <div className="bg-white rounded-xl shadow p-6">
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Assigned Beneficiaries</h2>
+      <div className="bg-black/60 rounded-xl shadow p-6">
+        <h2 className="text-xl font-semibold mb-4 text-white">Assigned Beneficiaries</h2>
         {beneficiaries.length === 0 ? (
-          <p className="text-gray-600">No beneficiaries added yet.</p>
+          <p className="text-white/70">No beneficiaries added yet.</p>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {beneficiaries.map((b, i) => (

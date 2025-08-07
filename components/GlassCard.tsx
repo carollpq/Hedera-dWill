@@ -21,7 +21,7 @@ export default function GlassCard({title, img, description, alt, className = ''}
                 bg-gradient-to-br from-white/20 to-white/0 rounded-[20px] 
                 shadow-[0px_12px_34px_0px_rgba(0,0,0,0.25)] outline outline-1 
                 outline-offset-[-1px] outline-white/50 backdrop-blur-xl inline-flex 
-                justify-center items-center gap-2 hover:cursor-pointer hover:bg-white/20
+                justify-center items-center gap-2 hover:bg-white/20
                 ${className}
             `}
         >
