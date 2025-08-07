@@ -29,7 +29,7 @@ export default function Home() {
                 {/* View Documents Card */}
                 <div
                     onClick={() => setIsViewDocumentsPage(true)}
-                    className="bg-black/60 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow hover:cursor-pointer hover:bg-white/30"
+                    className="bg-black/60 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow hover:cursor-pointer hover:bg-black"
                 >
                     <div className="p-3 bg-blue-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
                         <FileText className="w-6 h-6 text-blue-600" />
@@ -43,7 +43,7 @@ export default function Home() {
                 {/* Upload Files Card */}
                 <div
                     onClick={() => setIsUploadPage(true)}
-                    className="bg-black/60 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow hover:cursor-pointer hover:bg-white/30"
+                    className="bg-black/60 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow hover:cursor-pointer hover:bg-black"
                 >
                     <div className="p-3 bg-green-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
                         <UploadIcon className="w-6 h-6 text-green-600" />
@@ -57,7 +57,7 @@ export default function Home() {
                 {/* Encrypt Files Card */}
                 <div
                     onClick={() => setIsEncryptPage(true)}
-                    className="bg-black/60 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow hover:cursor-pointer hover:bg-white/30"
+                    className="bg-black/60 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow hover:cursor-pointer hover:bg-black"
                 >
                     <div className="p-3 bg-purple-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
                         <Lock className="w-6 h-6 text-purple-600" />
@@ -71,7 +71,7 @@ export default function Home() {
                 {/* Assign Beneficiaries Card */}
                 <div
                     onClick={() => setIsAssignBeneficiariesPage(true)}
-                    className="bg-black/60 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow hover:cursor-pointer hover:bg-white/30"
+                    className="bg-black/60 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow hover:cursor-pointer hover:bg-black"
                 >
                     <div className="p-3 bg-yellow-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
                         <Users className="w-6 h-6 text-yellow-600" />
