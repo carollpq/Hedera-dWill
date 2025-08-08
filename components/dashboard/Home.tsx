@@ -7,7 +7,7 @@ import { useState } from "react";
 
 export default function Home() {
     const {
-        isBenefactor, setIsBenefactor, isEncryptPage,
+        isKeySet, setIsKeySet, isBenefactor, setIsBenefactor, isEncryptPage,
         setIsEncryptPage, isUploadPage, setIsUploadPage,
         setIsBeneficiary, isBeneficiary,
         isViewDocumentsPage, setIsViewDocumentsPage,
@@ -17,7 +17,6 @@ export default function Home() {
     const { accountId, open, setOpen, handleConnect } = useWalletConnect();
     
     const [privateKey, setPrivateKey] = useState("");
-    const [isKeySet, setIsKeySet] = useState(false);
     const [highlightKeyForm, setHighlightKeyForm] = useState(false);
 
     const CardWrapper = ({
@@ -145,26 +144,6 @@ export default function Home() {
                 </div>
             )}
 
-
-
-            {/* Recent Activity Section */}
-            {/*<div className="bg-white rounded-xl shadow-sm p-6">*/}
-            {/*    <h2 className="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h2>*/}
-            {/*    <div className="space-y-4">*/}
-            {/*        <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">*/}
-            {/*            <div className="flex items-center space-x-3">*/}
-            {/*                <div className="p-2 bg-blue-100 rounded-lg">*/}
-            {/*                    <UploadIcon className="w-5 h-5 text-blue-600" />*/}
-            {/*                </div>*/}
-            {/*                <div>*/}
-            {/*                    <p className="text-sm font-medium text-gray-900">Document uploaded</p>*/}
-            {/*                    <p className="text-xs text-gray-500">2 hours ago</p>*/}
-            {/*                </div>*/}
-            {/*            </div>*/}
-            {/*            <span className="text-sm text-gray-600">will.pdf</span>*/}
-            {/*        </div>*/}
-            {/*    </div>*/}
-            {/*</div>*/}
         </div>
     );
 }

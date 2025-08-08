@@ -95,26 +95,26 @@ export default function AssignBeneficiaries() {
   };
 
 
-  // const transferHBARFromAllowance = async () => {
-  //   try {
-  //     for (const b of beneficiaries) {
-  //       if (b.funds > 0) {
-  //         const transferTx = new TransferTransaction()
-  //           .addApprovedHbarTransfer(accountId!, Hbar.from(b.funds, HbarUnit.Hbar).negated()) //to benefactor
-  //           .addHbarTransfer(b.address, Hbar.from(b.funds, HbarUnit.Hbar)) // to beneficiary
-  //           .freezeWith(client);
-  //         // Get bytes to send to wallet
-  //         const txBytes = transferTx.toBytes();
-  //         // Sign with WalletConnect-connected wallet
-  //         const response = await transferTx.execute(client);
-  //         const receipt = await response.getReceipt(client);
-  //         console.log(`Transferred ${b.funds} HBAR to ${b.address}:`, receipt.status.toString());
-  //       }
-  //     }
-  //   } catch (error) {
-  //     console.error("Transfer from allowance failed:", error);
-  //   }
-  // };
+  const transferHBARFromAllowance = async () => {
+    try {
+      for (const b of beneficiaries) {
+        if (b.funds > 0) {
+          const transferTx = new TransferTransaction()
+            .addApprovedHbarTransfer(accountId!, Hbar.from(b.funds, HbarUnit.Hbar).negated()) //to benefactor
+            .addHbarTransfer(b.address, Hbar.from(b.funds, HbarUnit.Hbar)) // to beneficiary
+            .freezeWith(client);
+          // Get bytes to send to wallet
+          const txBytes = transferTx.toBytes();
+          // Sign with WalletConnect-connected wallet
+          const response = await transferTx.execute(client);
+          const receipt = await response.getReceipt(client);
+          console.log(`Transferred ${b.funds} HBAR to ${b.address}:`, receipt.status.toString());
+        }
+      }
+    } catch (error) {
+      console.error("Transfer from allowance failed:", error);
+    }
+  };
 
   const scheduleTransferHBARFromAllowance = async (beneficiariesToUse = beneficiaries) => {
     try {
