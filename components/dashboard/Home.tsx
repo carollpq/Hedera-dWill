@@ -1,23 +1,31 @@
-import { FileText, Lock, Upload as UploadIcon, Users } from "lucide-react";
+"use client";
+
+import { FileText, KeyRound } from "lucide-react";
 import { useDashboardContext } from "@/context/DashboardContext";
 import HeaderWithActions from "@/components/HeaderWithActions";
 import { useWalletConnect } from "@/hooks/useWalletConnect";
-import { KeyRound } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function Home() {
     const {
-        isKeySet, setIsKeySet, isBenefactor, setIsBenefactor, isEncryptPage,
-        setIsEncryptPage, isUploadPage, setIsUploadPage,
-        setIsBeneficiary, isBeneficiary,
-        isViewDocumentsPage, setIsViewDocumentsPage,
-        setIsAssignBeneficiariesPage, isAssignBeneficiariesPage,
+        isKeySet, setIsKeySet, isEncryptPage,
+        setIsEncryptPage, setIsUploadPage,
+        setIsViewDocumentsPage, setIsAssignBeneficiariesPage
     } = useDashboardContext();
 
-    const { accountId, open, setOpen, handleConnect } = useWalletConnect();
-    
+    const { accountId } = useWalletConnect();
+
     const [privateKey, setPrivateKey] = useState("");
     const [highlightKeyForm, setHighlightKeyForm] = useState(false);
+
+    // New state to track role
+    const [userRole, setUserRole] = useState<"benefactor" | "beneficiary" | null>(null);
+
+    // Load user role from localStorage on mount
+    useEffect(() => {
+        const role = localStorage.getItem("userRole") as "benefactor" | "beneficiary" | null;
+        setUserRole(role);
+    }, []);
 
     const CardWrapper = ({
         children,
@@ -38,25 +46,21 @@ export default function Home() {
         </div>
     );
 
-
     return (
         <div className="space-y-8">
-            {/* Dashboard Header */}
             <HeaderWithActions title="Dashboard" />
-            <div className="rounded-xl shadow-sm">
-                <p className="text-white/80 text-600">
-                    Manage your documents and encryption settings from your dashboard.
-                </p>
-            </div>
 
-            {/* Navigation Cards */}
+            <p className="text-white/80">
+                Manage your documents and encryption settings from your dashboard.
+            </p>
+
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Keys setup */}
+
+                {/* Secret Key Setup Card */}
                 {!isKeySet && (
                     <div
                         onClick={() => {
                             setHighlightKeyForm(true);
-                            // Automatically remove highlight after 1.5 seconds
                             setTimeout(() => setHighlightKeyForm(false), 1500);
                         }}
                         className="bg-black/60 rounded-xl shadow-sm p-6 hover:shadow-md transition-shadow hover:cursor-pointer hover:bg-black"
@@ -71,50 +75,88 @@ export default function Home() {
                     </div>
                 )}
 
-                {/* View Documents Card */}
-                <CardWrapper onClick={() => setIsViewDocumentsPage(true)}>
-                    <div className="p-3 bg-blue-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
-                        <FileText className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-white">View Assets</h3>
-                    <p className="text-white/70 mt-1 text-sm">
-                        Browse and manage all your uploaded assets in one place.
-                    </p>
-                </CardWrapper>
-                {/* Upload Files Card */}
-                <CardWrapper onClick={() => setIsUploadPage(true)}>
-                    <div className="p-3 bg-blue-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
-                        <FileText className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-white">Upload Assets</h3>
-                    <p className="text-white/70 mt-1 text-sm">
-                        Securely upload new assets to your storage.
-                    </p>
-                </CardWrapper>
-                {/* Encrypt Files Card */}
-                <CardWrapper onClick={() => setIsEncryptPage(true)}>
-                    <div className="p-3 bg-blue-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
-                        <FileText className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-white">Encrypt Files</h3>
-                    <p className="text-white/70 mt-1 text-sm">
-                        Protect your sensitive files with encryption.
-                    </p>
-                </CardWrapper>
-                {/* Assign Beneficiaries Card */}
-                <CardWrapper onClick={() => setIsAssignBeneficiariesPage(true)}>
-                    <div className="p-3 bg-blue-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
-                        <FileText className="w-6 h-6 text-blue-600" />
-                    </div>
-                    <h3 className="text-lg font-semibold text-white">Assign Beneficiaries</h3>
-                    <p className="text-white/70 mt-1 text-sm">
-                        Assign beneficiaries and their inheritance.
-                    </p>
-                </CardWrapper>
+
+                {/* Benefactor-only Cards */}
+                {userRole === "benefactor" && (
+                    <>
+                        <CardWrapper onClick={() => setIsViewDocumentsPage(true)}>
+                            <div className="p-3 bg-blue-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                                <FileText className="w-6 h-6 text-blue-600" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-white">View Assets</h3>
+                            <p className="text-white/70 mt-1 text-sm">
+                                Browse all your assets in one place.
+                            </p>
+                        </CardWrapper>
+
+                        <CardWrapper onClick={() => setIsUploadPage(true)}>
+                            <div className="p-3 bg-blue-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                                <FileText className="w-6 h-6 text-blue-600" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-white">Upload Assets</h3>
+                            <p className="text-white/70 mt-1 text-sm">
+                                Securely upload new assets to your storage.
+                            </p>
+                        </CardWrapper>
+
+                        <CardWrapper onClick={() => setIsEncryptPage(true)}>
+                            <div className="p-3 bg-blue-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                                <FileText className="w-6 h-6 text-blue-600" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-white">Encrypt Files</h3>
+                            <p className="text-white/70 mt-1 text-sm">
+                                Protect your sensitive files with encryption.
+                            </p>
+                        </CardWrapper>
+
+                        <CardWrapper onClick={() => setIsAssignBeneficiariesPage(true)}>
+                            <div className="p-3 bg-blue-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                                <FileText className="w-6 h-6 text-blue-600" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-white">Assign Beneficiaries</h3>
+                            <p className="text-white/70 mt-1 text-sm">
+                                Assign beneficiaries and their inheritance.
+                            </p>
+                        </CardWrapper>
+                    </>
+                )}
+
+                {/* Beneficiary-only Cards */}
+                {userRole === "beneficiary" && (
+                    <>
+                        {/* Download Inheritance */}
+                        <CardWrapper onClick={() => {
+                            // Define what this button should trigger
+                            alert("Download Inheritance triggered");
+                        }}>
+                            <div className="p-3 bg-green-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                                <FileText className="w-6 h-6 text-green-600" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-white">Download Inheritance</h3>
+                            <p className="text-white/70 mt-1 text-sm">
+                                Access the assets that have been assigned to you by the benefactor.
+                            </p>
+                        </CardWrapper>
+
+                        {/* Decrypt Assets */}
+                        <CardWrapper onClick={() => {
+                            // Define what this button should trigger
+                            alert("Decrypt Assets triggered");
+                        }}>
+                            <div className="p-3 bg-purple-100 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                                <FileText className="w-6 h-6 text-purple-600" />
+                            </div>
+                            <h3 className="text-lg font-semibold text-white">Decrypt Assets</h3>
+                            <p className="text-white/70 mt-1 text-sm">
+                                Use your secret key to decrypt and view assigned encrypted files.
+                            </p>
+                        </CardWrapper>
+                    </>
+                )}
 
             </div>
 
-            {/* Key Setup Form */}
+            {/* Secret Key Form */}
             {!isKeySet && (
                 <div className={`mt-8 bg-black/60 p-6 rounded-xl shadow-sm transition-all duration-300 ${
                     highlightKeyForm ? "ring-2 ring-orange-400 shadow-orange-400" : ""
@@ -143,7 +185,6 @@ export default function Home() {
                     </button>
                 </div>
             )}
-
         </div>
     );
 }

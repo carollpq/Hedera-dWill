@@ -38,7 +38,7 @@ export default function RoleCard({
                 <div className="w-32 h-32 relative overflow-hidden flex flex-col justify-center items-center">
                     <Image src={src} alt={alt} width={300} height={300} />
                 </div>
-                {/* ✅ Button now triggers onClick */}
+                
                 {children}
                 <button
                     onClick={onClick}
